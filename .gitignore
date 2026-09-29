@@ -1,0 +1,26 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+
+# macOS
+.DS_Store
+
+# IDEs
+.idea/
+.vscode/
+
+# Generated experiment data
+results/raw/*
+
+# Keep the raw results directory in Git
+!results/raw/.gitkeep
+
+# Packet captures
+*.pcap
+*.pcapng
+
+# Logs
+*.log
