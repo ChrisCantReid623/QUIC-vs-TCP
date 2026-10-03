@@ -13,7 +13,7 @@ connectivity before introducing latency and packet loss.
 """
 
 from mininet.net import Mininet
-from mininet.node import OVSController
+from mininet.node import OVSBridge
 from mininet.link import TCLink
 from mininet.cli import CLI
 from mininet.log import setLogLevel, info
@@ -23,13 +23,11 @@ def create_network():
     """Create and start the baseline Mininet topology."""
 
     net = Mininet(
-        controller=OVSController,
+        controller=None,
+	switch=OVSBridge,
         link=TCLink,
         autoSetMacs=True
     )
-
-    info("*** Adding controller\n")
-    net.addController("c0")
 
     info("*** Adding hosts\n")
     h1 = net.addHost("h1", ip="10.0.0.1/24")
