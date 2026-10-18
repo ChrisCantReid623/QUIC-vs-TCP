@@ -24,3 +24,4 @@ results/raw/*
 
 # Logs
 *.log
+quic/certs/*.key
