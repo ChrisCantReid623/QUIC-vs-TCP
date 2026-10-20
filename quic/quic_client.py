@@ -2,12 +2,14 @@
 """QUIC sender for the TCP vs. QUIC Mininet experiment."""
 
 import argparse
+import json
 import asyncio
 import time
 from pathlib import Path
 
 from aioquic.asyncio.client import connect
 from aioquic.quic.configuration import QuicConfiguration
+from aioquic.quic.logger import QuicLogger
 
 PAYLOAD_SIZE = 10 * 1024 * 1024
 CHUNK_SIZE = 65536
@@ -19,12 +21,19 @@ async def main():
     parser.add_argument("--host", default="10.0.0.2")
     parser.add_argument("--port", type=int, default=4433)
     parser.add_argument("--congestion", default="reno")
+    parser.add_argument("--initial-rtt", type=float, default=0.25)
     args = parser.parse_args()
+
+    quic_logger = QuicLogger()
 
     configuration = QuicConfiguration(
         is_client=True,
         alpn_protocols=["tcp-quic-benchmark"],
         congestion_control_algorithm=args.congestion,
+        initial_rtt=args.initial_rtt,
+        quic_logger=quic_logger,
+        max_data=8 * 1024 * 1024,
+        max_stream_data=8 * 1024 * 1024,
     )
 
     configuration.load_verify_locations(
@@ -75,6 +84,16 @@ async def main():
         print(f"Connection time: {connection_time:.6f} seconds")
         print(f"Transfer completion time: {transfer_time:.6f} seconds")
         print(f"Throughput: {throughput:.3f} Mbps")
+
+    diagnostics = BASE_DIR.parent / "results" / "diagnostics"
+    diagnostics.mkdir(parents=True, exist_ok=True)
+
+    qlog_path = diagnostics / "quic_client_latest.qlog"
+
+    with qlog_path.open("w") as file:
+        json.dump(quic_logger.to_dict(), file)
+
+    print(f"QLOG saved to: {qlog_path}")
 
 
 if __name__ == "__main__":

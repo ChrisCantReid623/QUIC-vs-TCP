@@ -48,12 +48,16 @@ async def main():
     parser.add_argument("--host", default="10.0.0.2")
     parser.add_argument("--port", type=int, default=PORT)
     parser.add_argument("--congestion", default="reno")
+    parser.add_argument("--initial-rtt", type=float, default=0.25)
     args = parser.parse_args()
 
     configuration = QuicConfiguration(
         is_client=False,
         alpn_protocols=["tcp-quic-benchmark"],
         congestion_control_algorithm=args.congestion,
+        initial_rtt=args.initial_rtt,
+        max_data=8 * 1024 * 1024,
+        max_stream_data=8 * 1024 * 1024,
     )
 
     configuration.load_cert_chain(
