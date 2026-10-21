@@ -1,48 +1,57 @@
 # TCP vs QUIC — Experiment Checkpoint
 
-Date: October 20, 2026
-Status: PAUSED
+Date: October 21, 2026
+Status: EXPERIMENTS COMPLETE
 
 ## Experiment Progress
 
 Total planned: 270
-Completed: 210 (77.8%)
-Remaining: 60
+Completed: 270 (100%)
+Remaining: 0
 
 ## Completed RTT Configurations
 
-10 ms:  0%, 1%, 3% loss
-50 ms:  0%, 1%, 3% loss
-100 ms: 0%, 1%, 3% loss
-250 ms: 0%, 1%, 3% loss
-500 ms: 0%, 1% loss
+All three packet-loss levels (0%, 1%, 3%) were completed for:
 
-Each configuration includes:
+- 10 ms
+- 50 ms
+- 100 ms
+- 250 ms
+- 500 ms
+- 1000 ms
+
+Each RTT and packet-loss combination includes:
+
 - TCP CUBIC: 5 trials
 - TCP Reno: 5 trials
 - QUIC Reno: 5 trials
 
-## Remaining Experiments
+Total: 3 configurations x 6 RTT levels x 3 loss levels x 5 trials = 270.
 
-500 ms, 3% loss: 15 trials
-1000 ms, 0% loss: 15 trials
-1000 ms, 1% loss: 15 trials
-1000 ms, 3% loss: 15 trials
+## Experimental Results
 
-## Next Experiment
+- Dataset: `results/results.csv`
+- Statistical analysis: `analysis/analyze_results.py`
+- Throughput figures: `analysis/plot_results.py`
+- Connection-time figures: `analysis/plot_connection_time.py`
+- Methodology: `docs/experimental_design.md`
 
-TCP CUBIC
-RTT: 500 ms
-Packet loss: 3%
-Trial: 1
+The complete dataset, analysis scripts, and generated figures
+have been committed and pushed to GitHub.
 
-## Resume Command
+## Remaining Deliverables
 
-cd ~/QUIC-vs-TCP
-sudo python3 -u experiments/run_batch.py --execute --limit 1
+- Interpret the experimental findings and limitations.
+- Prepare the final research report.
+- Prepare the final presentation.
 
 ## Important
 
-Do not reset results/results.csv.
-The batch scheduler automatically skips completed trials.
-Final analysis, figures, paper, and presentation remain pending.
+The experimental matrix is complete. No additional trials
+are currently required.
+
+Preserve `results/results.csv` as the completed dataset.
+
+The previous checkpoint, recorded on October 20, 2026,
+documented a paused experiment at 210/270 trials.
+A local backup preserves that historical checkpoint.
