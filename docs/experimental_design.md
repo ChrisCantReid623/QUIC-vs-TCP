@@ -82,3 +82,28 @@ Phase 4: Experiment automation and data collection
 Phase 5: Statistical analysis and visualization
 
 Phase 6: Final report and presentation
+
+## Connection Establishment Measurement
+
+Connection establishment time is measured using Python's
+`time.perf_counter()` in both client implementations.
+
+- **TCP:** Timing begins immediately before `socket.connect()` and
+  ends when the TCP three-way handshake completes.
+- **QUIC:** Timing begins immediately before entering aioquic's
+  `connect()` context and ends when the context yields a connected
+  protocol. The default `wait_connected=True` waits for QUIC
+  connection establishment, including its integrated TLS handshake.
+- **Transfer timing:** Both implementations begin measuring transfer
+  completion after connection establishment and stop after receiving
+  the server's completion acknowledgment.
+
+**Comparability limitation:** TCP connection establishment does not
+include TLS, whereas QUIC connection establishment includes its
+integrated TLS handshake. Consequently, these measurements represent
+implementation-specific connection milestones rather than equivalent
+secure-connection setup costs. They should not be interpreted as a
+direct comparison of secure TCP versus secure QUIC establishment.
+
+The QUIC client also includes local asynchronous connection setup
+within its measured interval.
