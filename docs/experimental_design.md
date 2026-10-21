@@ -14,24 +14,53 @@ H3: QUIC and TCP will exhibit different connection-establishment and transfer-co
 
 ## Network Model
 
-The initial experiment will use a simple client-server topology in Mininet.
+Experiments were conducted using a 13-node hierarchical office
+network implemented in Mininet.
 
-    h1 (Client) -------- Network -------- h2 (Server)
+The topology consists of seven switches and six hosts:
 
-The link between the hosts will be configured with controlled delay and packet-loss parameters.
+- Core: s1
+- Distribution: s2, s3
+- Access: s4, s5, s6, s7
+- Hosts: h1, h2, h3, h4, h5, h6
+
+The experimental client runs on h1 (10.0.0.1), and the server
+runs on h2 (10.0.0.2).
+
+The traffic path is:
+
+    h1 -- s4 -- s2 -- s1 -- s3 -- s7 -- h2
+
+Each link has a configured bandwidth of 100 Mbps.
+
+Network delay was introduced on the two core-distribution links,
+s1-s2 and s1-s3, with each direction assigned one-quarter of
+the target round-trip time.
+
+Packet loss was configured on the s1-s2 link in both directions.
+The second core-distribution link was not assigned additional
+packet loss.
+
+The network model represents controlled terrestrial and
+high-latency conditions rather than a complete satellite
+network simulation.
 
 ## Independent Variables
 
-Protocol:
-- TCP
-- QUIC
+Protocol and congestion-control configuration:
+- TCP CUBIC
+- TCP Reno
+- QUIC Reno
 
-Latency:
+Target round-trip time (RTT):
 - 10 ms
 - 50 ms
 - 100 ms
+- 250 ms
+- 500 ms
+- 1000 ms
 
-Packet Loss:
+Configured packet loss:
 - 0%
 - 1%
 - 3%
@@ -50,38 +79,63 @@ Supporting:
 
 ## Experimental Matrix
 
-Each combination of protocol, latency, and packet loss will initially be executed five times.
+The completed experiment contains:
 
-Total runs:
+- 3 protocol/congestion-control configurations
+- 6 target RTT values
+- 3 configured packet-loss levels
+- 5 trials per condition
 
-2 x 3 x 3 x 5 = 90
+Total completed runs:
+
+    3 x 6 x 3 x 5 = 270
+
+All 270 trial records are stored in `results/results.csv`.
 
 ## Experimental Controls
 
-To make comparisons meaningful, experiments should use the same:
+The following parameters were held constant across trials:
 
-- Network topology
-- Client and server hosts
-- Transfer size
-- Link bandwidth
-- Software environment
-- Measurement procedure
+- Network: 13-node hierarchical Mininet topology
+- Client: h1 (10.0.0.1)
+- Server: h2 (10.0.0.2)
+- Transfer payload: 10 MiB
+- Configured link bandwidth: 100 Mbps
+- Software environment: Ubuntu 22.04 and Python
+- Trials per condition: five
 
-Only the variables intentionally being tested should change between conditions.
+Throughput was calculated as payload bits divided by measured
+transfer completion time. Transfer completion includes receipt
+of the server's completion acknowledgment.
 
-## Planned Workflow
+QUIC's initial RTT estimate was configured to match the target
+emulated RTT. This tuning should be considered when interpreting
+comparisons with TCP.
 
-Phase 1: Environment and topology setup
+Only protocol/congestion-control configuration, target RTT,
+and configured packet loss varied across experimental conditions.
 
-Phase 2: TCP and QUIC baseline testing
+## Experimental Workflow and Status
 
-Phase 3: Controlled latency and packet-loss experiments
+The following phases have been completed:
 
-Phase 4: Experiment automation and data collection
+1. Configure the Ubuntu environment and hierarchical Mininet topology.
+2. Implement TCP and QUIC client-server transfers.
+3. Validate baseline connectivity and performance measurements.
+4. Execute the full 270-trial experimental matrix.
+5. Calculate descriptive statistics, including mean, median,
+   and sample standard deviation.
+6. Generate throughput and connection-establishment figures
+   for all three packet-loss configurations.
 
-Phase 5: Statistical analysis and visualization
+The experimental dataset and analysis scripts are preserved
+in the project repository.
 
-Phase 6: Final report and presentation
+Remaining project deliverables:
+
+- Interpret the experimental findings and limitations.
+- Prepare the final research report.
+- Prepare the final presentation.
 
 ## Connection Establishment Measurement
 
