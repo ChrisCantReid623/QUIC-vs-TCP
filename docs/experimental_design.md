@@ -72,10 +72,13 @@ Primary:
 - Transfer completion time
 
 Supporting:
-- RTT
 - Connection establishment time
-- Packet loss
-- Retransmission / recovery behavior
+
+Target RTT and configured packet loss are independent variables,
+not measured performance outcomes.
+
+Retransmission and recovery behavior were not directly instrumented
+in the collected experimental dataset.
 
 ## Experimental Matrix
 
